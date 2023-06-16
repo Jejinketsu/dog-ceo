@@ -1,23 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import CardList from "../components/templates/CardList";
-import { useQuery } from "@tanstack/react-query";
-import { getAllDogs } from "../api";
+import { FavoritesContext } from "../contexts/FavoritesContext";
 
 const Favorites = () => {
-  const { data, refetch, isFetching } = useQuery({
-    ...getAllDogs,
-  });
+  const { favorites } = useContext(FavoritesContext);
 
-  const breedList = Object.keys(data?.message || {});
-
-  return (
-    <CardList
-      title="Favorite Breeds"
-      breedList={breedList}
-      isFetching={isFetching}
-      refetch={refetch}
-    />
-  );
+  return <CardList title="Favorite Breeds" breedList={favorites} />;
 };
 
 export default Favorites;

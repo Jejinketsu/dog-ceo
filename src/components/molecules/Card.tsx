@@ -1,9 +1,11 @@
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, Pressable } from "react-native";
 
-import React from "react";
+import React, { useContext, useMemo } from "react";
 import { getRandomBreedPic } from "../../api";
 import Button from "../atoms/Button";
 import { useQuery } from "@tanstack/react-query";
+import { FavoritesContext } from "../../contexts/FavoritesContext";
+import { useRouter } from "expo-router";
 
 type CardProps = {
   name: string;
@@ -11,18 +13,29 @@ type CardProps = {
 };
 
 const Card = ({ name, isFavorite }: CardProps) => {
+  const { favorites, addFavorite, removeFavorite } =
+    useContext(FavoritesContext);
   const { data, isLoading } = useQuery(["getRandomBreedPic", name], () =>
     getRandomBreedPic.queryFn(name)
   );
+  const router = useRouter();
 
-  const [favorite, setFavorite] = React.useState(false);
+  const favorite = useMemo(() => favorites.includes(name), [favorites]);
 
-  const handleFavorite = () => {
-    setFavorite(!favorite);
+  const handleFavorite = async () => {
+    if (favorite) removeFavorite(name);
+    else addFavorite(name);
+  };
+
+  const handleCardPress = () => {
+    router.push(`/breed/${name}`);
   };
 
   return (
-    <View className="bg-white p-2 rounded-lg mt-2">
+    <Pressable
+      className="bg-white p-2 rounded-lg mt-2 active:opacity-70"
+      onPress={handleCardPress}
+    >
       {!data && isLoading ? (
         <View className="h-56 w-40 bg-gray-500 rounded-lg justify-center items-center">
           <Text className="font-bold text-white text-lg">Loading...</Text>
@@ -48,7 +61,7 @@ const Card = ({ name, isFavorite }: CardProps) => {
           PressableProps={{ onPress: handleFavorite }}
         />
       </View>
-    </View>
+    </Pressable>
   );
 };
 
