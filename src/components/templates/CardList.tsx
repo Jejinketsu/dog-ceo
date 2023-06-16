@@ -39,7 +39,9 @@ const CardList = ({ title, breedList, isFetching, refetch }: CardListProps) => {
 
       <FlashList
         className="mt-2"
-        data={breedList.filter((breed) => breed.includes(breedsSearch))}
+        data={breedList.filter((breed) =>
+          breed.includes(breedsSearch.toLowerCase())
+        )}
         keyExtractor={(item, index) => item + index}
         estimatedItemSize={240}
         refreshing={isFetching}

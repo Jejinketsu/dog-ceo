@@ -8,7 +8,11 @@ type PhotoPreviewerProps = {
 const PhotoPreviewer = ({ uri }: PhotoPreviewerProps) => {
   return (
     <View className="mt-2">
-      <Image className="h-56 w-44 rounded-lg" source={{ uri }} />
+      <Image
+        resizeMode="cover"
+        className="h-56 w-44 rounded-lg"
+        source={{ uri }}
+      />
     </View>
   );
 };
